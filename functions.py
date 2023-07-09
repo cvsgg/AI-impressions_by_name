@@ -27,7 +27,7 @@ def get_comments(text, names, api_key):
     comments_per_name = {name: [] for name in names}
 
     for name in names:
-        prompt = f"Get the short comment in {text} talking about the {name}:"
+        prompt = f"In according to the {text}, who is {name}?"
 
         response = openai.Completion.create(
             engine='davinci', 
@@ -40,8 +40,7 @@ def get_comments(text, names, api_key):
         )
 
         if response.choices:
-            for name in comments_per_name:
-                comments = response.choices[0].text.strip()
-                comments_per_name[name].append(comments)
+            comments = response.choices[0].text.strip().removeprefix(prompt).strip()
+            comments_per_name[name].append(comments)
 
     return comments_per_name
